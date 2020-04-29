@@ -18,11 +18,14 @@ public class EnemyController : MonoBehaviour
     public Material flash;
     //Delay till the flash Should show after this delay default Materials will assign
     public float flashDelay = 0.1f;
-
+    //Store rotation information as Every Fighter has different behaviour
+    Vector3 defaultRotation;
     void Start()
     {
         //Setting Max value from Health Point
         maxHealthPoint = healthPoint;
+        //Setting rotation value
+        defaultRotation = transform.eulerAngles;
         //This will Set the Default material using linked renderer
         SetDefaultMaterial();        
     }
@@ -39,6 +42,7 @@ public class EnemyController : MonoBehaviour
     public void ResetData()
     {
         healthPoint = maxHealthPoint;
+        transform.eulerAngles = defaultRotation;
         ResetFlash();
         UpdateHealthBar();
         
@@ -53,7 +57,7 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         //We will use simple Translate function with forward direction and multiple with delta for smooth movement
-        transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
+        //transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
         //We don't want AI to go less then -5 because if it goes to -5 means it out of the screen
         if (transform.position.z < -5)
             gameObject.SetActive(false);

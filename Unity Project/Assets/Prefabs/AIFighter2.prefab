@@ -314,6 +314,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7167466793071767310}
   - component: {fileID: 7167466793071767309}
+  - component: {fileID: 6960681366422380812}
+  - component: {fileID: 103875442000527093}
   m_Layer: 10
   m_Name: AIFighter2
   m_TagString: Enemy
@@ -353,15 +355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270c1d321e0b63b46b9a06f431e93570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 3
-  delayBetweenFire: 0.25
-  lastFireTime: 0
-  damagePower: 0
-  firePoint:
-  - {fileID: 7537038816020985507}
-  firePrefab: {fileID: 5909306597628483415, guid: 1d8d52544e99b814c9a99131f4f842b3,
-    type: 3}
-  fires: []
   healthPoint: 20
   renderer:
   - {fileID: 7167466792113658452}
@@ -370,8 +363,53 @@ MonoBehaviour:
   defaultMaterial: []
   flash: {fileID: 2100000, guid: 14de4654591df614abff9e7f58066386, type: 2}
   flashDelay: 0.02
+  forwardSpeed: 3
+  delayBetweenFire: 0.25
+  lastFireTime: 0
+  fireSpeed: 10
+  firePoint:
+  - {fileID: 7537038816020985507}
+  bulletPrefab: {fileID: 0}
+  fireToPlayer: 0
+  fires: []
   healthBg: {fileID: 7167466793264805331}
   currentHealthScale: {x: 1, y: 1, z: 1}
+--- !u!114 &6960681366422380812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7167466793071767308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d85c63a8edd634b838aba961fc6472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forwardSpeed: 5
+  speed: 0
+  pointToMove: {x: 0, y: 0, z: 0}
+  behaviourWhenZ: 8
+  fighterBehaviour: 0
+  zigZagRange: {x: 0, y: 0}
+  isLeft: 0
+  stopAtZ: 0
+--- !u!54 &103875442000527093
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7167466793071767308}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &7167466793264805331
 GameObject:
   m_ObjectHideFlags: 0

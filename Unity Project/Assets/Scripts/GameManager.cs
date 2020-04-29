@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
 
-        Screen.SetResolution(450, 750, true);
+      
         instance = this;
     }
     void Start()
@@ -67,7 +67,8 @@ public class GameManager : MonoBehaviour
     /// 
     /// </summary>
     // Fighter Prefabs
-    public GameObject aiFighter1, aiFighter2,aiFighter3,aiFighter4;
+    public GameObject aiFighter1,aiFighter2,aiFighter3,aiFighter4;
+    
     // Spawn Style(Enum) to define spawn style
     public spawnStyle currentSpawnSytle;
     //Pooling List of AI Fighters
@@ -174,10 +175,11 @@ public class GameManager : MonoBehaviour
                         //If its null we spawn 
                         if (newAi == null)
                         {
-                            
+                            //Ai Fighter with Only Forward Be
                             newAi = Instantiate(aiFighter1);
                             listOfFighterPlane1.Add(newAi.GetComponent<EnemyController>());
                         }
+                       
                     }
                     else if (randomFighter <= 60)
                     {
@@ -208,6 +210,7 @@ public class GameManager : MonoBehaviour
                     }
                     //We will set the x position to random between -3.8f to 3.8f as we dont want to spawn out of Screen X
                     newAi.transform.position = new Vector3(Random.Range(-3.8f, 3.8f), 0, expectedZ);
+                    
                     //Setting Fighter Ai active  to true
                     newAi.SetActive(true);
                     //Setting lastSpawnFighterPlane as this newAI
@@ -221,14 +224,42 @@ public class GameManager : MonoBehaviour
                     float distanceBetweenTwo = 3;
                     //We don't want sequence to come in different x value so we will define common random value for all Fighter AI
                     float lastXVal = Random.Range(-3.8f, 3.8f);
+                    //V0.2 Added Ramdom Behaviour
+                    int randomBehaviour =  Random.Range(1, 5); //1-4
                     for (int i = 0; i < 3; i++)
                     {
                         //We will try to get the Fighter AI from list
                         newAi = GetFighterPlane(1);
-                        if(newAi==null)
-                        newAi  = Instantiate(aiFighter1);
+                        if(newAi==null) 
+                        newAi  = Instantiate(aiFighter1);//V0.2 Giving variation in behaviour
+                       
+                     
+                        FighterBehaviour behaviour = newAi.GetComponent<FighterBehaviour>();
+                        switch(randomBehaviour)
+                        {
+                            case 1:
+                                behaviour.fighterBehaviour = eFighterBehaviour.Straight;
+                                break;
+                            case 2:
+                                behaviour.fighterBehaviour = eFighterBehaviour.GoLeft;
+                                behaviour.pointToMove = new Vector3(-11, 0, 5);
+                                behaviour.speed = 12f;
+                                behaviour.behaviourWhenZ = Random.Range(6, 8);
+                                break;
+                            case 3:
+                                behaviour.fighterBehaviour = eFighterBehaviour.GoRight;
+                                behaviour.pointToMove = new Vector3(11, 0, 5);
+                                behaviour.speed = 12f;
+                                behaviour.behaviourWhenZ = Random.Range(6, 8);
+                                break;
+                            case 4:
+                                behaviour.fighterBehaviour = eFighterBehaviour.ZigZag;
+                                behaviour.speed = 0.5f;
+
+                                break;
+                        }
                         //We multiple z value with i inorder to get the difference in z value
-                        newAi.transform.position = new Vector3(lastXVal, 0, lastZVal+(i*distanceBetweenTwo));
+                        newAi.transform.position = new Vector3(lastXVal, 0, lastZVal+(i*distanceBetweenTwo));                        
                         newAi.SetActive(true);
                         lastSpawnFighterPlane = newAi;
                     }
@@ -243,7 +274,8 @@ public class GameManager : MonoBehaviour
     #region Result
     //Storing data (Best Score) using player pref
     //Static function to Get Best Score
-    public static int GetBestScore()
+    //Moving this static function to Static Class
+    /*public static int GetBestScore()
     {
         return PlayerPrefs.GetInt("BestScore");
     }
@@ -251,7 +283,7 @@ public class GameManager : MonoBehaviour
     public static void SetBestScore(int val)
     {
         PlayerPrefs.SetInt("BestScore", val);
-    }
+    }*/
     public GameObject resultPage;
     public TextMeshProUGUI scoreText, bestScoreTxt;
     int score;
@@ -262,11 +294,11 @@ public class GameManager : MonoBehaviour
     public void ShowResultPage()
     {
         scoreText.text = score + "";
-        if(score>GetBestScore())
+        if(score>StaticData.GetBestScore())
         {
-            SetBestScore(score);
+            StaticData.SetBestScore(score);
         }
-        bestScoreTxt.text = GetBestScore() + "";
+        bestScoreTxt.text = StaticData.GetBestScore() + "";
         resultPage.SetActive(true);
     }
     public void RetryAtResultPage()
@@ -274,7 +306,38 @@ public class GameManager : MonoBehaviour
         resultPage.SetActive(false);
         Application.LoadLevel(Application.loadedLevelName);
     }
+    public void HomeAtResultPage()
+    {
+        resultPage.SetActive(false);
+        Application.LoadLevel("Menu");
+    }
     #endregion;
+    //Region For Pause Page
+    #region  PausePage
+    public GameObject pausePage;
+    public void Paused()
+    {
+        Time.timeScale = 0;
+        pausePage.SetActive(true);
+    }
+    public void Resume()
+    {
+        Time.timeScale = 1;
+        pausePage.SetActive(false);
+    }
+    public void HomeAtPause()
+    {
+        Time.timeScale = 1;
+        pausePage.SetActive(false);
+        Application.LoadLevel("Menu");
+    }
+    public void RetryAtPause()
+    {
+        Time.timeScale = 1;
+        pausePage.SetActive(false);
+        Application.LoadLevel(Application.loadedLevelName);
+    }
+    #endregion
 }
 public enum spawnStyle
 {

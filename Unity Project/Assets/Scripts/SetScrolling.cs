@@ -9,8 +9,10 @@ public class SetScrolling : MonoBehaviour
   //Temp variable to hold position information
     Vector3 nextPoint;    
     private void Update()    {
-       
-       
+
+        //If Game is paused 
+        if (Time.timeScale == 0) return;
+
         nextPoint = transform.position;
         //As every set has common speed we take the speed from SetScrollController
         nextPoint.z += SetScrollController.instance.forwardSpeed;

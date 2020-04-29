@@ -315,6 +315,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1948203800463352571}
   - component: {fileID: 1948203800463352568}
+  - component: {fileID: 3183853903569395931}
+  - component: {fileID: 4776422214171996605}
   m_Layer: 10
   m_Name: AIFighter1
   m_TagString: Enemy
@@ -354,15 +356,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270c1d321e0b63b46b9a06f431e93570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 3
-  delayBetweenFire: 0.25
-  lastFireTime: 0
-  damagePower: 0
-  firePoint:
-  - {fileID: 1217780342071409494}
-  firePrefab: {fileID: 5909306597628483415, guid: 1d8d52544e99b814c9a99131f4f842b3,
-    type: 3}
-  fires: []
   healthPoint: 20
   renderer:
   - {fileID: 1948203799236286369}
@@ -371,8 +364,53 @@ MonoBehaviour:
   defaultMaterial: []
   flash: {fileID: 2100000, guid: 14de4654591df614abff9e7f58066386, type: 2}
   flashDelay: 0.02
+  forwardSpeed: 3
+  delayBetweenFire: 0.25
+  lastFireTime: 0
+  fireSpeed: 10
+  firePoint:
+  - {fileID: 1217780342071409494}
+  bulletPrefab: {fileID: 0}
+  fireToPlayer: 0
+  fires: []
   healthBg: {fileID: 1948203800370657318}
   currentHealthScale: {x: 1, y: 1, z: 1}
+--- !u!54 &3183853903569395931
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948203800463352569}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!114 &4776422214171996605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948203800463352569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33d85c63a8edd634b838aba961fc6472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forwardSpeed: 2.5
+  speed: 0.5
+  pointToMove: {x: 11, y: 0, z: 5}
+  behaviourWhenZ: 10
+  fighterBehaviour: 3
+  zigZagRange: {x: -1, y: 1}
+  isLeft: 0
+  stopAtZ: 0
 --- !u!1 &1948203801076326411
 GameObject:
   m_ObjectHideFlags: 0

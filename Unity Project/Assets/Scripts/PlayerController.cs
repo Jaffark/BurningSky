@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    
+
     // For Now Both PlayerController and EnemyController will have almost same field and function
     //Later we will make it common
-
+    //V0.2 Dones 
+    public List<GameObject> playerDrones;
     //Holds Max Health Point
-   public  float maxHealthPoint;
+    public  float maxHealthPoint;
     //Holds Current Health Point
     public float healthPoint;
 
@@ -168,12 +169,18 @@ public class PlayerController : MonoBehaviour
             gameObject.SetActive(false);
             //Saying GameManager to Show Result Page
             GameManager.instance.ShowResultPage();
+            //Disabling the Drone
+            foreach (GameObject obj in playerDrones)
+                obj.SetActive(false);
+
 
         }
         //As Player Get Damage we say GameManager to update health Bar
         GameManager.instance.PlayerGetDamage();
 
     }
+    //
+   
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collisiong "+collision.gameObject.name);
