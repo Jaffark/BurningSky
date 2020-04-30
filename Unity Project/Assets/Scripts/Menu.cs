@@ -14,7 +14,11 @@ public class Menu : MonoBehaviour
     {
         //To Set Resolution in PC to Portriat
         Screen.SetResolution(450, 750, true);
-
+        if(StaticData.comeFromPage == "LevelCompleted")
+        {
+            PlayAtMenu();
+        }
+        StaticData.comeFromPage = "";
         instance = this;
         CheckHighScore();
     }
@@ -72,6 +76,7 @@ public class Menu : MonoBehaviour
             Debug.Log("Level is Lock");
             return;
         }
+        StaticData.SetLevel(level);
         DeTweenLevlSelection();
         StartCoroutine(LoadGame());
     }

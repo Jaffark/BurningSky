@@ -22,7 +22,8 @@ public class PlayerController : MonoBehaviour
     public Material flash;
     //Delay till the flash Should show after this delay default Materials will assign
     public float flashDelay = 0.1f;
-
+    //For Shield
+    public GameObject shieldEffect;
 
     void Start()
     {
@@ -146,13 +147,23 @@ public class PlayerController : MonoBehaviour
             renderer[i].material = defaultMaterial[i];
         }
     }
+    //Shield
+    public void EnableShield()
+    {
+        shieldEffect.SetActive(true);
+    }
 
-    
-  
+
+
     public void OnHit()
     {
         if (healthPoint <= 0)
             return;
+        if(shieldEffect.activeInHierarchy)
+        {
+            shieldEffect.SetActive(false);
+            return;
+        }
         healthPoint--;
         //InOrder to Give Flash effect we loop with renderer list and assign the flash material
         for (int i = 0; i < renderer.Count; i++)
@@ -168,7 +179,7 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.SetActive(false);
             //Saying GameManager to Show Result Page
-            GameManager.instance.ShowResultPage();
+            GameManager.instance.ShowResultPage("Failed");
             //Disabling the Drone
             foreach (GameObject obj in playerDrones)
                 obj.SetActive(false);

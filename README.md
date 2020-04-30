@@ -1,5 +1,13 @@
 # BurningSky
 Burning Sky Demo
+V0.3
+What’s in V0.3?
+1. Boss 
+2. 5 Levels
+3. Shield Power up
+
+
+
 V0.2 -- Updated On 29-4-2020 
 What's in V0.2?
 1. Drone Logic

@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     //Defining Static  for GameManager
     public static GameManager instance;
+    
     private void Awake()
     {
 
@@ -17,8 +18,19 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        
+        //Loading Level Base on Selection from Menu
+        SetLevel();
     }
+    //Level Base not Random
+    //List Of Level 
+    public List<GameObject> levels;
+    void SetLevel()
+    {
+        //Enabling selected level 
+        levels[StaticData.GetLevel()].SetActive(true);
+    }
+    //Power Up and Coins prefab
+    public GameObject shieldPrefab;
     //Linking Player as Common in order to use in some suitation
     public PlayerController player;
     //InOrder to show health bar we use Image with ImageType filled
@@ -50,10 +62,12 @@ public class GameManager : MonoBehaviour
     }
     // Update is called once per frame
     public bool startSpawning;
+    bool useRandomSpawn;
     void Update()
     {
         if (!startSpawning)
             return;
+        if(useRandomSpawn)
         SpawnAI();
     }
 
@@ -271,6 +285,36 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region PowerUp
+    public void PowerUpPickUp(string powerUpId)
+    {
+        switch(powerUpId)
+        {
+            case "Shield":
+                player.EnableShield();
+                break;
+        }
+    }
+    //If AI fighter Can give any power then we call this function
+    public void SpawnPowerUpAt(GameObject atObj,ePowerUpType powerUpType)
+    {
+        GameObject effectToLoad = null;
+        switch(powerUpType)
+        {
+            case ePowerUpType.shield:
+                effectToLoad = shieldPrefab;
+                break;
+                  
+        }
+        if (effectToLoad)
+        {
+            GameObject newPower = Instantiate(effectToLoad);
+            newPower.transform.position = atObj.transform.position;
+            newPower.gameObject.SetActive(true);
+        }
+    }
+    #endregion
+
     #region Result
     //Storing data (Best Score) using player pref
     //Static function to Get Best Score
@@ -284,31 +328,93 @@ public class GameManager : MonoBehaviour
     {
         PlayerPrefs.SetInt("BestScore", val);
     }*/
-    public GameObject resultPage;
+    
     public TextMeshProUGUI scoreText, bestScoreTxt;
     int score;
     public void FighterPlanDestroy()
     {
         score++;
     }
-    public void ShowResultPage()
+    public void BossKilled()
     {
-        scoreText.text = score + "";
-        if(score>StaticData.GetBestScore())
-        {
-            StaticData.SetBestScore(score);
-        }
-        bestScoreTxt.text = StaticData.GetBestScore() + "";
-        resultPage.SetActive(true);
+        StartCoroutine(ShowCompletePage());
     }
-    public void RetryAtResultPage()
+    //If there is no Boss Fight once we load the all AI Fighter from Level Manager 
+    //We start checking whether there is any AI fighter avaialble or not inorder to call level complete page
+    public void StartCheckingInLoopForLC()
     {
-        resultPage.SetActive(false);
+        StartCoroutine(CheckForLCForEveryDelayOf(1f));
+    }
+    IEnumerator CheckForLCForEveryDelayOf(float delay)
+    {
+        bool isAvailable = true;
+
+        while (isAvailable)
+        {
+            EnemyController[] ai = GameObject.FindObjectsOfType<EnemyController>();
+            if (ai.Length <= 0)
+            {
+                isAvailable = false;
+            }
+            yield return new WaitForSeconds(delay);
+        }
+       StartCoroutine(ShowCompletePage());
+    }
+
+    IEnumerator ShowCompletePage()
+    {
+        //Just giving delay for Level Complete page
+        yield return new WaitForSeconds(2);
+        ShowResultPage("Completed");
+    }
+    public GameObject failedPageContent, completePageContent;
+    public void ShowResultPage(string resultType)
+    {
+        switch (resultType)
+        {
+            case "Failed":
+                failedPageContent.SetActive(true);
+                break;
+            case "Completed":
+                scoreText.text = score + "";
+                if (score > StaticData.GetBestScore())
+                {
+                    StaticData.SetBestScore(score);
+                    
+                }
+                if(score>StaticData.GetLevelBestScore(StaticData.GetLevel()))
+                {
+                    StaticData.SetLevelBestScore(score, StaticData.GetLevel());
+                }
+                bestScoreTxt.text = StaticData.GetBestScore() + "";
+                completePageContent.SetActive(true);
+                //Storing Unlock information so that we can blink the newly unlock level in Level Selection
+                if(!StaticData.IsLevelUnlock(StaticData.GetLevel()+1))
+                {
+                    StaticData.lastLevelUnlock = StaticData.GetLevel() + 1;
+                }
+                StaticData.SetLevelUnlockTo("true", StaticData.GetLevel()+1);
+                break;
+        }
+       
+      //  resultPage.SetActive(true);
+    }
+    public void NextAtLevelCompleted()
+    {
+        //When You press Next button we will show level selection instead of Menu Page
+        //So using this static variable we can know frome where the player has come from
+        StaticData.comeFromPage = "LevelCompleted";
+        failedPageContent.SetActive(false);
+        Application.LoadLevel("Menu");
+    }
+    public void RetryAtFailed()
+    {
+        failedPageContent.SetActive(false);
         Application.LoadLevel(Application.loadedLevelName);
     }
-    public void HomeAtResultPage()
+    public void HomeAtFailed()
     {
-        resultPage.SetActive(false);
+        failedPageContent.SetActive(false);
         Application.LoadLevel("Menu");
     }
     #endregion;
@@ -338,8 +444,14 @@ public class GameManager : MonoBehaviour
         Application.LoadLevel(Application.loadedLevelName);
     }
     #endregion
+
+
 }
 public enum spawnStyle
 {
     single,multiple,leftRight
+}
+public enum ePowerUpType
+{
+    none,shield
 }

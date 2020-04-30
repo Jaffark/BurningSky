@@ -813,6 +813,7 @@ GameObject:
   - component: {fileID: 563724588882422077}
   - component: {fileID: 6042850582790368232}
   - component: {fileID: 2530721924898363099}
+  - component: {fileID: 1693697506464405437}
   m_Layer: 5
   m_Name: LevelButton
   m_TagString: Untagged
@@ -858,6 +859,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lockObj: {fileID: 4275702559108576637}
   unlockObj: {fileID: 5122743933970752529}
+  levelBestText: {fileID: 966604349947278566}
   levelNo: 0
 --- !u!114 &2530721924898363099
 MonoBehaviour:
@@ -912,6 +914,25 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!95 &1693697506464405437
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6162951846986938222}
+  m_Enabled: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: de883f61625c00f4dad4f43d4e3348e0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6602233921937781686
 GameObject:
   m_ObjectHideFlags: 0

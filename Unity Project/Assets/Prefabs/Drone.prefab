@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4386494412102440420}
   m_Layer: 9
   m_Name: Drone
-  m_TagString: Player
+  m_TagString: Drone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,6 +54,8 @@ MonoBehaviour:
   - {fileID: 7912608883878911456}
   bulletPrefab: {fileID: 4848566862286544759, guid: 70db79918c2081f4399a353f01635080,
     type: 3}
+  rotationSpeedForBullet: 0
+  bulletDelayToLookTarget: 0
   fires: []
 --- !u!1 &4386494412467665360
 GameObject:
@@ -66,7 +68,7 @@ GameObject:
   - component: {fileID: 4386494412467665361}
   m_Layer: 9
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Drone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -100,7 +102,7 @@ GameObject:
   - component: {fileID: 4386494412720267846}
   m_Layer: 9
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Drone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

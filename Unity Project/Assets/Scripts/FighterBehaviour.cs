@@ -34,6 +34,7 @@ public class FighterBehaviour : MonoBehaviour
     [Header("Properties for Behaviour Come And Shoot")]
     public float stopAtZ;
     // Update is called once per frame
+    Quaternion targetRotation;
     void Update()
     {
        
@@ -49,7 +50,7 @@ public class FighterBehaviour : MonoBehaviour
             case eFighterBehaviour.GoRight:
                 if (transform.position.z <= behaviourWhenZ)
                 {
-                    Quaternion targetRotation = Quaternion.LookRotation(pointToMove - transform.position);
+                     targetRotation = Quaternion.LookRotation(pointToMove - transform.position);
                     transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, speed * Time.deltaTime);
                 }
                 break;
@@ -76,6 +77,11 @@ public class FighterBehaviour : MonoBehaviour
                     move = false;
                 }
                 break;
+            case eFighterBehaviour.lookAndShootPlayer:
+                pointToMove = GameManager.instance.player.transform.position;
+                targetRotation = Quaternion.LookRotation(pointToMove - transform.position);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, speed * Time.deltaTime);
+                break;
         }
         if (move)
         {
@@ -87,5 +93,5 @@ public class FighterBehaviour : MonoBehaviour
 
 public enum eFighterBehaviour
 {
-    Straight,GoLeft,GoRight,ZigZag,comeAndShoot
+    Straight,GoLeft,GoRight,ZigZag,comeAndShoot,lookAndShootPlayer
 }

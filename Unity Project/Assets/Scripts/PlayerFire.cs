@@ -11,7 +11,7 @@ public class PlayerFire : MonoBehaviour
     public GameObject target;
     void Start()
     {
-        
+       
     }
     //This willl reset the velocity and angular velocity if any
     //and then add force to this
@@ -92,15 +92,38 @@ public class PlayerFire : MonoBehaviour
         
        if(collision.gameObject.tag =="Enemy")
         {
-            collision.transform.root.GetComponent<EnemyController>().OnHit();
-            gameObject.SetActive(false);
-            target = null; // Making to null as we are pooling the list
+            Debug.Log("Enemy "+collision.gameObject.name);
+            if(collision.transform.GetComponent<EnemyController>())
+            {
+                collision.transform. GetComponent<EnemyController>().OnHit();
+                gameObject.SetActive(false);
+                target = null; // Making to null as we are pooling the list
+            }
+            else if (collision.transform.parent && collision.transform.parent.GetComponent<EnemyController>())
+            {
+                collision.transform.parent.GetComponent<EnemyController>().OnHit();
+                gameObject.SetActive(false);
+                target = null; // Making to null as we are pooling the list
+            }
+            else if (collision.transform.root.GetComponent<EnemyController>())
+            {
+
+                collision.transform.root.GetComponent<EnemyController>().OnHit();
+                gameObject.SetActive(false);
+                target = null; // Making to null as we are pooling the list
+            }
+            
         }
        if (collision.gameObject.tag == "Player")
         {
             collision.transform.root.GetComponent<PlayerController>().OnHit();
             gameObject.SetActive(false);
             target = null; // Making to null as we are pooling the list
+        }
+        if (collision.gameObject.tag == "Drone")
+        {
+            gameObject.SetActive(false);
+            target = null;
         }
     }
 }

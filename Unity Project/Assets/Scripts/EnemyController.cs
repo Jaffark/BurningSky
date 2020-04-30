@@ -20,8 +20,18 @@ public class EnemyController : MonoBehaviour
     public float flashDelay = 0.1f;
     //Store rotation information as Every Fighter has different behaviour
     Vector3 defaultRotation;
+
+
+    //For PowerUp
+    public ePowerUpType powerUpToGive;
     void Start()
     {
+        if (!isReady)
+        {
+            healthBg.transform.parent.gameObject.SetActive(false);
+        }
+        if (!transform.parent.GetComponent<BossController>())
+        transform.SetParent(null);
         //Setting Max value from Health Point
         maxHealthPoint = healthPoint;
         //Setting rotation value
@@ -68,6 +78,10 @@ public class EnemyController : MonoBehaviour
     public float delayBetweenFire;
     //Last Fire Time
     public float lastFireTime;
+    //public float relaxFire
+    public float delayBetweenNFire;
+    public int nFireAtATime;
+    int currentFireCount;
     //Fire Speed
     public float fireSpeed=10;
     //AI may have single, multiple  or maynot have Fire Point
@@ -76,14 +90,26 @@ public class EnemyController : MonoBehaviour
     public PlayerFire bulletPrefab;
     //making to true bullet will target the player
     public bool fireToPlayer;
+    
     void HandleFire()
     {
-
+        if (!isReady)
+            return;
         //We will compare the last fire time with current time in order to give delay between firing
+        if (currentFireCount>=nFireAtATime && nFireAtATime>0)
+        {
+            if(Time.time>=lastFireTime+delayBetweenNFire)
+            {
+                currentFireCount = 0;
+            }
+            return;
+        }
         if (Time.time >= lastFireTime + delayBetweenFire && transform.position.z>-5f) //If the AI goes below will will stop firing
         {
             //Setting the fire time to current time
             lastFireTime = Time.time;
+           
+            currentFireCount++;
             for (int i = 0; i < firePoint.Count; i++)
             {
                 //Trying to get Fire From Pool list
@@ -126,8 +152,18 @@ public class EnemyController : MonoBehaviour
         healthBg.transform.localScale = currentHealthScale;
     }
     //When a player bullet hit we reduce the health point by 1
+    public bool isReady=true;
+    //If Its not ready it will not get damage and even can't shoot
+    public void MakeItReady()
+    {
+        isReady = true;
+        healthBg.transform.parent.gameObject.SetActive(true);
+
+    }
     public void OnHit()
     {
+        if (!isReady)
+            return;
         if (healthPoint <= 0)
             return;
 
@@ -147,9 +183,14 @@ public class EnemyController : MonoBehaviour
         {           
             //Calling Function to do some work like score
             GameManager.instance.FighterPlanDestroy();
+            if (powerUpToGive!=ePowerUpType.none)
+            {
+                GameManager.instance.SpawnPowerUpAt(gameObject,powerUpToGive);
+            }
             //Seting active to false
             gameObject.SetActive(false);
-
+            if (transform.parent && transform.parent.GetComponent<BossController>())
+                transform.parent.GetComponent<BossController>().CallBackWeaponDestoryed();
         }
 
     }

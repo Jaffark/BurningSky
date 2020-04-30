@@ -272,9 +272,12 @@ MonoBehaviour:
   defaultMaterial: []
   flash: {fileID: 2100000, guid: 14de4654591df614abff9e7f58066386, type: 2}
   flashDelay: 0.02
+  powerUpToGive: 0
   forwardSpeed: 3.5
   delayBetweenFire: 0.5
   lastFireTime: 0
+  delayBetweenNFire: 2
+  nFireAtATime: 4
   fireSpeed: 10
   firePoint:
   - {fileID: 2652473106457959795}
@@ -283,6 +286,7 @@ MonoBehaviour:
   fires: []
   healthBg: {fileID: 3395854790859824643}
   currentHealthScale: {x: 1, y: 1, z: 1}
+  isReady: 1
 --- !u!114 &1784154936539720426
 MonoBehaviour:
   m_ObjectHideFlags: 0
