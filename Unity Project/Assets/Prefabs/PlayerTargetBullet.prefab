@@ -28,9 +28,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4848566862286544757}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -0.047, y: 0.0623, z: -0.58}
-  m_LocalScale: {x: 0.26153603, y: 0.16369039, z: 0.46070275}
+  m_LocalScale: {x: 20.638807, y: 20.638803, z: 20.638805}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4848566862286544757}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 4300002, guid: 4406760f751616e448fedfbd53f83f24, type: 3}
 --- !u!23 &9035778536604963469
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6b03f78158c306e4ba91f0d0c2503d6b, type: 2}
+  - {fileID: 2100000, guid: 4406760f751616e448fedfbd53f83f24, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -91,8 +91,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.01, y: 0.01, z: 0.031282187}
+  m_Center: {x: 0, y: 0, z: 0.010641092}
 --- !u!54 &4848566862286544758
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -124,5 +124,8 @@ MonoBehaviour:
   rig: {fileID: 4848566862286544758}
   useTarget: 1
   target: {fileID: 0}
+  damageValue: 2
   rotationSpeed: 700
   forwardSpeed: 2
+  startTime: 0
+  delayToLookTarget: 2

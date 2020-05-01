@@ -88,8 +88,13 @@ public class PlayerController : MonoBehaviour
     public float fireSpeed=10;
     //A player can have multiple fires 
     public List<Transform> firePoint;
+    public Vector3 firePointOffset;//To Manage with particle
     //Bullet Prefab
     public PlayerFire bulletPrefab;
+    //If use Bulllet 2x
+    public PlayerFire bullet2XPrefab;
+    public ParticleSystem particleFirePrefab;
+    public Vector3 particleScale = new Vector3(2, 2, 2);
 
     void HandleFire()
     {
@@ -101,26 +106,88 @@ public class PlayerController : MonoBehaviour
             for (int i = 0; i < firePoint.Count; i++)
             {
                 //Getting Fire Prefab from Pool list
-                PlayerFire fire = GetFires();
-                //If its null we will spawn and add to the pool list
-                if (fire == null)
+              
+                if (particleFirePrefab)
                 {
-                    fire = Instantiate(bulletPrefab);
-                    fires.Add(fire);
+                    ParticleSystem firesParticle = GetParticles();
+                    if (firesParticle == null)
+                    {
+                        firesParticle = Instantiate(particleFirePrefab);
+                        particlesFires.Add(firesParticle);
+                    }
+                    firesParticle.gameObject.transform.SetParent(this.transform);
+                    firesParticle.transform.position = firePoint[i].transform.position;
+                    firesParticle.transform.localScale = particleScale;
+                    firesParticle.gameObject.SetActive(true);
+                    firesParticle.Play();
+                    StartCoroutine(FireByDelay(i,0.35f));
                 }
-                fire.transform.position = firePoint[i].transform.position;
-                fire.transform.rotation = firePoint[i].transform.rotation;
-                fire.gameObject.SetActive(true);
+                else
+                {
+                    StartCoroutine(FireByDelay(i, 0));
+                }
+
+
+               // fire.gameObject.SetActive(true);
                 //Calling fire function to add force
-                fire.Fire(fireSpeed);
+               // fire.Fire(fireSpeed);
             }
         }
     }
+    IEnumerator FireByDelay(int i,float delay)
+    {
+
+        yield return new WaitForSeconds(delay);
+        PlayerFire fire = GetFires();
+        //If its null we will spawn and add to the pool list
+        if (fire == null)
+        {
+            if (GameManager.instance.isPowerUp2X)
+            {
+                fire = Instantiate(bullet2XPrefab);
+                fires2X.Add(fire);
+            }
+            else
+            {
+                fire = Instantiate(bulletPrefab);
+                fires.Add(fire);
+            }
+        }
+        fire.transform.position = firePoint[i].transform.position+ firePointOffset;
+        fire.transform.rotation = firePoint[i].transform.rotation;
+
+        fire.gameObject.SetActive(true);
+        fire.Fire(fireSpeed);
+
+    }
+    public List<ParticleSystem> particlesFires = new List<ParticleSystem>();
+    public ParticleSystem GetParticles()
+    {
+        for (int i = 0; i < particlesFires.Count; i++)
+        {
+            if (!particlesFires[i].gameObject.activeInHierarchy)
+                return particlesFires[i];
+        }
+        return null;
+    }
     // Pool list for Fires
     public List<PlayerFire> fires;
+    public List<PlayerFire> fires2X;
     //Function will return bullets which can be reuse
     public PlayerFire GetFires()
     {
+        if(GameManager.instance.isPowerUp2X)
+        {
+            for (int i = 0; i < fires2X.Count; i++)
+            {
+                if (!fires2X[i].gameObject.activeInHierarchy)
+                {
+                    return fires2X[i];
+                }
+            }
+            return null;
+            
+        }
         for(int i=0;i<fires.Count;i++)
         {
             if(!fires[i].gameObject.activeInHierarchy)
@@ -155,7 +222,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    public void OnHit()
+    public void OnHit(int damageAmount = 1)
     {
         if (healthPoint <= 0)
             return;
@@ -164,7 +231,7 @@ public class PlayerController : MonoBehaviour
             shieldEffect.SetActive(false);
             return;
         }
-        healthPoint--;
+        healthPoint-= damageAmount;
         //InOrder to Give Flash effect we loop with renderer list and assign the flash material
         for (int i = 0; i < renderer.Count; i++)
         {
@@ -194,7 +261,7 @@ public class PlayerController : MonoBehaviour
    
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collisiong "+collision.gameObject.name);
+        //Debug.Log("Collisiong "+collision.gameObject.name);
         if(collision.gameObject.tag=="Enemy")
         {
             OnHit();

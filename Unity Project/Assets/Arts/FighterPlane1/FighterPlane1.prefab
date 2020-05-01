@@ -408,7 +408,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1901583763101068209}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.747}
+  m_LocalPosition: {x: 0, y: 0, z: 0.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4170184731182959842}
@@ -477,6 +477,7 @@ MonoBehaviour:
   defaultMaterial: []
   flash: {fileID: 2100000, guid: 14de4654591df614abff9e7f58066386, type: 2}
   flashDelay: 0.1
+  shieldEffect: {fileID: 0}
   tiltAngle: -25
   smooth: 2
   fighterBody: {fileID: 7804171917267458707}
@@ -492,9 +493,16 @@ MonoBehaviour:
   - {fileID: 2660621034028081066}
   - {fileID: 745104504346518571}
   - {fileID: 3146790091929936584}
+  firePointOffset: {x: 0, y: 0, z: 1}
   bulletPrefab: {fileID: 5909306597628483415, guid: 7c31e6843b860474cb52fbd59c503903,
     type: 3}
+  bullet2XPrefab: {fileID: 4848566862286544759, guid: 70db79918c2081f4399a353f01635080,
+    type: 3}
+  particleFirePrefab: {fileID: 0}
+  particleScale: {x: 2, y: 2, z: 2}
+  particlesFires: []
   fires: []
+  fires2X: []
 --- !u!54 &1234512563
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -717,7 +725,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2269364757170174082}
   m_LocalRotation: {x: 0, y: -0.043619405, z: 0, w: 0.9990483}
-  m_LocalPosition: {x: -0.5, y: 0, z: 1.747}
+  m_LocalPosition: {x: -0.5, y: 0, z: 0.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4170184731182959842}
@@ -777,7 +785,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3345304471065730714}
   m_LocalRotation: {x: 0, y: 0.043619405, z: 0, w: 0.9990483}
-  m_LocalPosition: {x: 0.5, y: 0, z: 1.747}
+  m_LocalPosition: {x: 0.5, y: 0, z: 0.51}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4170184731182959842}

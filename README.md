@@ -1,11 +1,16 @@
 # BurningSky
 Burning Sky Demo
+V0.4
+What's in V0.4?
+1. Power Up 2 (2X Hit)
+2. Few Fighter Plane AI Changed and Improved
+3. Few VFX
+
 V0.3
 What’s in V0.3?
 1. Boss 
 2. 5 Levels
 3. Shield Power up
-
 
 
 V0.2 -- Updated On 29-4-2020 

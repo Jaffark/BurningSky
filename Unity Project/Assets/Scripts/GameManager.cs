@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     {
         //Loading Level Base on Selection from Menu
         SetLevel();
+        defaultCameraPos = cam.transform.position;
     }
     //Level Base not Random
     //List Of Level 
@@ -47,6 +48,7 @@ public class GameManager : MonoBehaviour
     //Update health bar;
     public void PlayerGetDamage()
     {
+        ShakeCamera();
         //Setting the Health Bar Image color to white 
         healthBar.color = healthBarFlashColor;
         //Reseting the Health Bar color to Default with some dela
@@ -69,8 +71,26 @@ public class GameManager : MonoBehaviour
             return;
         if(useRandomSpawn)
         SpawnAI();
-    }
 
+        HandlePowerUp2X();
+    }
+    #region Camera Shake
+    public Camera cam;
+    public float shakeVal=0.25f;
+    Vector3 defaultCameraPos;
+    public void ShakeCamera()
+    {
+
+        StartCoroutine(ShakeTheCamera());
+    }
+    IEnumerator ShakeTheCamera()
+    {
+        cam.transform.position = defaultCameraPos + new Vector3(shakeVal, 0, shakeVal);// defaultCameraPos * shakeVal;
+        yield return new WaitForSeconds(0.01f);
+        cam.transform.position = defaultCameraPos;
+
+    }
+    #endregion
 
     #region SpawnLogic
     /// <summary>
@@ -445,6 +465,68 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    #region Explosion
+    //Pooling list for Explosion (Another way to pool in a common script)
+    public List<GameObject> explosionList;
+    public GameObject explosionEffect;
+   
+    public GameObject GetExplosionEffect()
+    {
+        for(int i=0;i<explosionList.Count;i++)
+        {
+            if (!explosionList[i].activeInHierarchy)
+                return explosionList[i];
+        }
+        return null;
+    }
+    public void DisableGameObjWithDelay(GameObject objToDisable,float delay)
+    {
+        StartCoroutine(DisableObj(objToDisable, delay));
+
+    }
+    #endregion
+    #region PowerUp 2X
+    //
+    public bool isPowerUp2X;
+    //If Stroke PowerUp2x fill Amount is 1 we can use the power up 
+    public Image strokePowerUp2x;
+    float lastPowerUpUseTime;
+    public void PowerUp2XClick()
+    {
+        //Use once click the powerup he has to wait till 20 Secound and life time for power up will be 10
+        if (isPowerUp2X)
+            return;
+        if(strokePowerUp2x.fillAmount>=1)
+        {
+            lastPowerUpUseTime = Time.time;
+            isPowerUp2X = true;
+            strokePowerUp2x.fillAmount = 0;
+        }
+    }
+    float currentTimerForPowerUp;
+    //Power Up Time 
+    float powerUp2xTime = 10;
+    //Power up time to use again
+    float powerUp2xFillTime = 20;
+    void HandlePowerUp2X()
+    {
+        if (strokePowerUp2x.fillAmount>=1)
+            return;
+        currentTimerForPowerUp = Time.time - lastPowerUpUseTime;
+        strokePowerUp2x.fillAmount = currentTimerForPowerUp / 20;
+
+        //As PowerUp time is 10 secound we need to disable the powerup if currentTimerForPowerUp greater than 10
+        if(currentTimerForPowerUp>=10) 
+        {
+            isPowerUp2X = false;
+        }
+    }
+    #endregion
+    IEnumerator DisableObj(GameObject obj, float delay) {
+
+        yield return new WaitForSeconds(delay);
+        obj.SetActive(false);
+    }
 
 }
 public enum spawnStyle

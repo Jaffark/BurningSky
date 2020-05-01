@@ -652,13 +652,20 @@ MonoBehaviour:
   firePoint:
   - {fileID: 6762503069966875088}
   - {fileID: 1005830442692946902}
+  firePointOffset: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 5909306597628483415, guid: 1d8d52544e99b814c9a99131f4f842b3,
     type: 3}
+  particleFirePrefab: {fileID: 0}
+  particleScale: {x: 2, y: 2, z: 2}
+  cannon: {fileID: 0}
+  cannonRotationSpeed: 25
   fireToPlayer: 0
+  particlesFires: []
   fires: []
   healthBg: {fileID: 6212215933988715168}
   currentHealthScale: {x: 1, y: 1, z: 1}
   isReady: 1
+  explosionEffectScale: {x: 1.8, y: 1.8, z: 1.8}
 --- !u!54 &8350926189635170638
 Rigidbody:
   m_ObjectHideFlags: 0

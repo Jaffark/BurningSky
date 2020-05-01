@@ -9,6 +9,7 @@ public class PlayerFire : MonoBehaviour
     Vector3 startDistance;
     public bool useTarget;
     public GameObject target;
+    public int damageValue = 1;
     void Start()
     {
        
@@ -17,10 +18,11 @@ public class PlayerFire : MonoBehaviour
     //and then add force to this
     public void Fire(float speed)
     {
-
+        startDistance = transform.position;
         rig.velocity = Vector3.zero;
         rig.angularVelocity = Vector3.zero;
-        startDistance = transform.position;
+      
+       
 
         //Specially for Drone Bullet //Rocket Like
         if (useTarget)
@@ -92,23 +94,23 @@ public class PlayerFire : MonoBehaviour
         
        if(collision.gameObject.tag =="Enemy")
         {
-            Debug.Log("Enemy "+collision.gameObject.name);
+            //Debug.Log("Enemy "+collision.gameObject.name);
             if(collision.transform.GetComponent<EnemyController>())
             {
-                collision.transform. GetComponent<EnemyController>().OnHit();
+                collision.transform. GetComponent<EnemyController>().OnHit(damageValue);
                 gameObject.SetActive(false);
                 target = null; // Making to null as we are pooling the list
             }
             else if (collision.transform.parent && collision.transform.parent.GetComponent<EnemyController>())
             {
-                collision.transform.parent.GetComponent<EnemyController>().OnHit();
+                collision.transform.parent.GetComponent<EnemyController>().OnHit(damageValue);
                 gameObject.SetActive(false);
                 target = null; // Making to null as we are pooling the list
             }
             else if (collision.transform.root.GetComponent<EnemyController>())
             {
 
-                collision.transform.root.GetComponent<EnemyController>().OnHit();
+                collision.transform.root.GetComponent<EnemyController>().OnHit(damageValue);
                 gameObject.SetActive(false);
                 target = null; // Making to null as we are pooling the list
             }
@@ -116,7 +118,7 @@ public class PlayerFire : MonoBehaviour
         }
        if (collision.gameObject.tag == "Player")
         {
-            collision.transform.root.GetComponent<PlayerController>().OnHit();
+            collision.transform.root.GetComponent<PlayerController>().OnHit(damageValue);
             gameObject.SetActive(false);
             target = null; // Making to null as we are pooling the list
         }

@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
         {
             healthBg.transform.parent.gameObject.SetActive(false);
         }
-        if (!transform.parent.GetComponent<BossController>())
+        if (transform.parent &&  !transform.parent.GetComponent<BossController>())
         transform.SetParent(null);
         //Setting Max value from Health Point
         maxHealthPoint = healthPoint;
@@ -69,8 +69,16 @@ public class EnemyController : MonoBehaviour
         //We will use simple Translate function with forward direction and multiple with delta for smooth movement
         //transform.Translate(Vector3.forward * Time.deltaTime * forwardSpeed);
         //We don't want AI to go less then -5 because if it goes to -5 means it out of the screen
-        if (transform.position.z < -5)
+        if (transform.position.z < -5 || transform.position.z>400 || transform.position.x>25 || transform.position.x<-25) // defining few boundary to disable the plane
             gameObject.SetActive(false);
+
+        //Handling Cannon
+        if (cannon)
+        {
+            Vector3 pointToMove = GameManager.instance.player.transform.position;
+            Quaternion targetRotation = Quaternion.LookRotation(pointToMove - cannon.transform.position);
+            cannon.transform.rotation = Quaternion.RotateTowards(cannon.transform.rotation, targetRotation, cannonRotationSpeed * Time.deltaTime);
+        }
         //This will handle Fire Function
         HandleFire();
     }
@@ -86,9 +94,14 @@ public class EnemyController : MonoBehaviour
     public float fireSpeed=10;
     //AI may have single, multiple  or maynot have Fire Point
     public List<Transform> firePoint;
+    public Vector3 firePointOffset;
     //Bullet Prefab
     public PlayerFire bulletPrefab;
+    public ParticleSystem particleFirePrefab;
+    public Vector3 particleScale = new Vector3(2, 2, 2);
     //making to true bullet will target the player
+    public GameObject cannon;
+    public float cannonRotationSpeed=25;
     public bool fireToPlayer;
     
     void HandleFire()
@@ -112,22 +125,61 @@ public class EnemyController : MonoBehaviour
             currentFireCount++;
             for (int i = 0; i < firePoint.Count; i++)
             {
-                //Trying to get Fire From Pool list
-                PlayerFire fire = GetFires();
-                //If fire is null we will spawn  from prefab
-                if (fire == null)
+                //Trying to get Fire From Pool list               
+                if (particleFirePrefab)
                 {
-                    fire = Instantiate(bulletPrefab);
-                    fires.Add(fire);
+                    ParticleSystem firesParticle = GetParticles();
+                    if (firesParticle == null)
+                    {
+                        firesParticle = Instantiate(particleFirePrefab);
+                        particlesFires.Add(firesParticle);
+                    }
+                    firesParticle.gameObject.transform.SetParent(firePoint[i].transform);
+                    firesParticle.transform.position = firePoint[i].transform.position;
+                    firesParticle.transform.localScale = particleScale;
+                    firesParticle.gameObject.SetActive(true);
+                    firesParticle.Play();                    
+                    StartCoroutine(FireByDelay(i,0.35f));
                 }
-                fire.transform.position = firePoint[i].transform.position;
-                if (fireToPlayer)
-                    firePoint[i].transform.LookAt(GameManager.instance.player.transform);
-                fire.transform.rotation = firePoint[i].transform.rotation;
-                fire.gameObject.SetActive(true);
-                fire.Fire(fireSpeed);
+                else
+                {
+                    StartCoroutine(FireByDelay(i,0));
+                    
+                }
+
+                //fire.gameObject.SetActive(true);
+                //fire.Fire(fireSpeed);
             }
         }
+    }
+    IEnumerator FireByDelay(int i,float delay)
+    {
+       
+        yield return new WaitForSeconds(delay);
+        PlayerFire fire = GetFires();
+        //If fire is null we will spawn  from prefab
+        if (fire == null)
+        {
+            fire = Instantiate(bulletPrefab);
+            fires.Add(fire);
+        }
+        fire.transform.position = firePoint[i].transform.position+ firePoint[i].transform.forward*firePointOffset.z;
+        if (fireToPlayer && cannon==null)
+            firePoint[i].transform.LookAt(GameManager.instance.player.transform);
+        fire.transform.rotation = firePoint[i].transform.rotation;
+        fire.gameObject.SetActive(true);
+        fire.Fire(fireSpeed);
+        
+    }
+    public List<ParticleSystem> particlesFires = new List<ParticleSystem>();
+    public ParticleSystem GetParticles()
+    {
+        for(int i=0;i< particlesFires.Count;i++)
+        {
+            if (!particlesFires[i].gameObject.activeInHierarchy)
+                return particlesFires[i];
+        }
+        return null;
     }
     public List<PlayerFire> fires;
     public PlayerFire GetFires()
@@ -160,14 +212,14 @@ public class EnemyController : MonoBehaviour
         healthBg.transform.parent.gameObject.SetActive(true);
 
     }
-    public void OnHit()
+    public void OnHit(float damageAmount=1)
     {
         if (!isReady)
             return;
         if (healthPoint <= 0)
             return;
-
-        healthPoint--;
+        //Debug.Log("Hit by "+damageAmount);
+        healthPoint-=damageAmount;
         //InOrder to Give Flash effect we loop with renderer list and assign the flash material
         for(int i = 0; i < renderer.Count; i++)
         {
@@ -188,6 +240,7 @@ public class EnemyController : MonoBehaviour
                 GameManager.instance.SpawnPowerUpAt(gameObject,powerUpToGive);
             }
             //Seting active to false
+            LoadExplosion();
             gameObject.SetActive(false);
             if (transform.parent && transform.parent.GetComponent<BossController>())
                 transform.parent.GetComponent<BossController>().CallBackWeaponDestoryed();
@@ -202,4 +255,21 @@ public class EnemyController : MonoBehaviour
             renderer[i].material = defaultMaterial[i];
         }
     }
+    //Effect 
+    #region Effect
+    public Vector3 explosionEffectScale=new Vector3(1,1,1);
+     void LoadExplosion()
+    {
+        GameObject explosionEffect = GameManager.instance.GetExplosionEffect();
+        if (explosionEffect == null)
+        {
+            explosionEffect = Instantiate(GameManager.instance.explosionEffect);
+            explosionEffect.transform.position = transform.position;
+            GameManager.instance.DisableGameObjWithDelay(explosionEffect, 5);
+            explosionEffect.transform.localScale = explosionEffectScale;
+            explosionEffect.SetActive(true);
+        }
+    }
+
+    #endregion
 }
