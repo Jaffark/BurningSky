@@ -5,8 +5,41 @@ using UnityEngine;
 
 public class StaticData : MonoBehaviour
 {
+    public static float movementTouchSensitivity;
+    public static float GetMovementTouchSensitivity()
+    {
+        return  PlayerPrefs.GetFloat("MovementTouchSensitivity", 4);
+        
+    }
+    public static void SetMovemenetTouchSensitivity(float val)
+    {
+        PlayerPrefs.SetFloat("MovementTouchSensitivity", val);
+    }
     public static string comeFromPage;
     public static int lastLevelUnlock = 0;
+    public static bool IsMusicOn()
+    {
+        if (PlayerPrefs.GetString("IsMusicOn") == "false")
+            return false;
+        return true;
+    }
+    public static void SetMusicTo(string val)
+    {
+        PlayerPrefs.SetString("IsMusicOn", val);
+    }
+
+    public static bool IsSoundOn()
+    {
+        if (PlayerPrefs.GetString("IsSoundOn") == "false")
+            return false;
+        return true;
+    }
+    public static void SetSoundTo(string val)
+    {
+        PlayerPrefs.SetString("IsSoundOn", val);
+    }
+
+
     //Will return Best Score
     public static int GetBestScore()
     {

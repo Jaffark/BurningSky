@@ -40,7 +40,7 @@ public class BossController : MonoBehaviour
         {
             gameObject.SetActive(false);
             GameManager.instance.BossKilled();
-            Debug.Log("Level Cleared");
+            //Debug.Log("Level Cleared");
         }
     }
 

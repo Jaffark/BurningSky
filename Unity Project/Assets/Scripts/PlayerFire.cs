@@ -12,12 +12,17 @@ public class PlayerFire : MonoBehaviour
     public int damageValue = 1;
     void Start()
     {
-       
+
     }
     //This willl reset the velocity and angular velocity if any
     //and then add force to this
+    public AudioSource fireShootSource;
     public void Fire(float speed)
     {
+        if (StaticData.IsSoundOn() && fireShootSource && transform.position.z>-4 && transform.position.z<16)
+        {
+            fireShootSource.Play();
+        }
         startDistance = transform.position;
         rig.velocity = Vector3.zero;
         rig.angularVelocity = Vector3.zero;
@@ -81,7 +86,7 @@ public class PlayerFire : MonoBehaviour
        
 
        // if the bulllet goes off the screen we will disable it
-        if(transform.position.z>13.5f || transform.position.z<-10)
+        if(transform.position.z>20f || transform.position.z<-10)
         {
             gameObject.SetActive(false);
         }
@@ -92,7 +97,7 @@ public class PlayerFire : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         
-       if(collision.gameObject.tag =="Enemy")
+       if(collision.gameObject.tag =="Enemy" && transform.position.z < 14.5f) //To Fix Sound Bug with player bullet
         {
             //Debug.Log("Enemy "+collision.gameObject.name);
             if(collision.transform.GetComponent<EnemyController>())

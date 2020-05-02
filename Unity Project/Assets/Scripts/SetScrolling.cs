@@ -18,9 +18,9 @@ public class SetScrolling : MonoBehaviour
         nextPoint.z += SetScrollController.instance.forwardSpeed;
         //Once it reached to value -50 or lower
         //We add the No of  Set * Set Size which is 75
-        if (transform.position.z <= -50)
+        if (transform.position.z <= -70)
         {
-            nextPoint.z+= 75;          
+            nextPoint.z+= 105;          
         }
         transform.position = nextPoint;
     }

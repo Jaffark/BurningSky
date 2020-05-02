@@ -10,13 +10,15 @@ public class SetScrollController : MonoBehaviour
     public float forwardSpeed = 2;
     void Start()
     {
-        instance = this;   
+        instance = this;
+       
     }
-   
+
     // Update is called once per frame
+   
     void Update()
     {
-       
+      
         //From speed to slow effect at starting for the set scrolling 
         if(forwardSpeed<-0.1f)
         {

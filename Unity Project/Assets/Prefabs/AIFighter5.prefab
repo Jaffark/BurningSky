@@ -767,27 +767,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 270c1d321e0b63b46b9a06f431e93570, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultRotation: {x: 0, y: 0, z: 0}
+  maxHealthPoint: 0
   healthPoint: 20
   renderer:
   - {fileID: 4988988082313736449}
   - {fileID: 4988988082720801311}
   - {fileID: 4988988081004698189}
-  defaultMaterial: []
   flash: {fileID: 2100000, guid: 14de4654591df614abff9e7f58066386, type: 2}
   flashDelay: 0.02
-  forwardSpeed: 3.5
+  powerUpToGive: 0
   delayBetweenFire: 0.5
   lastFireTime: 0
+  delayBetweenNFire: 0
+  nFireAtATime: 0
   fireSpeed: 5
   firePoint:
   - {fileID: 5680015454410808822}
   - {fileID: 2233545950008381424}
+  firePointOffset: {x: 0, y: 0, z: 0}
   bulletPrefab: {fileID: 5909306597628483415, guid: 1d8d52544e99b814c9a99131f4f842b3,
     type: 3}
+  particleFirePrefab: {fileID: 0}
+  particleScale: {x: 2, y: 2, z: 2}
+  cannon: {fileID: 0}
+  cannonRotationSpeed: 25
   fireToPlayer: 0
-  fires: []
   healthBg: {fileID: 4988988081296416390}
   currentHealthScale: {x: 1, y: 1, z: 1}
+  isReady: 1
+  explosionEffectScale: {x: 1, y: 1, z: 1}
+  explosionAS: {fileID: 0}
 --- !u!54 &6984582055414355304
 Rigidbody:
   m_ObjectHideFlags: 0

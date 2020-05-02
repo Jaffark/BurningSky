@@ -2,51 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour
+public class EnemyController : FighterPlane
 {
-    // Start is called before the first frame update
-    //Holds Max Health Point
-    float maxHealthPoint;
-    //Holds Current Health Point
-    public float healthPoint;
-
-    //We will link the renderer in order to give flash effect if player bullet hit
-    public List<Renderer> renderer;
-    //we will store the Materials information in order to reset back to the default material once the flash is done
-    public List<Material> defaultMaterial;
-    //Flash material , We will set this material when it get hit by player 
-    public Material flash;
-    //Delay till the flash Should show after this delay default Materials will assign
-    public float flashDelay = 0.1f;
-    //Store rotation information as Every Fighter has different behaviour
-    Vector3 defaultRotation;
-
-
+   
+ 
     //For PowerUp
     public ePowerUpType powerUpToGive;
     void Start()
     {
+
         if (!isReady)
         {
             healthBg.transform.parent.gameObject.SetActive(false);
         }
         if (transform.parent &&  !transform.parent.GetComponent<BossController>())
         transform.SetParent(null);
-        //Setting Max value from Health Point
-        maxHealthPoint = healthPoint;
-        //Setting rotation value
-        defaultRotation = transform.eulerAngles;
-        //This will Set the Default material using linked renderer
-        SetDefaultMaterial();        
+        SetDefaultValues();
     }
-    //Added Material from Renderer to Default Material
-    void SetDefaultMaterial()
-    {
-        for (int i = 0; i < renderer.Count; i++)
-        {
-            defaultMaterial.Add(renderer[i].material);
-        }
-    }
+  
 
     //To Reuse this AI we reset its healtPoint and Health Bar
     public void ResetData()
@@ -61,9 +34,7 @@ public class EnemyController : MonoBehaviour
 
    
 
-    // Update is called once per frame
-    //Speed with which it move
-    public float forwardSpeed;
+    // Update is called once per frame   
     void Update()
     {
         //We will use simple Translate function with forward direction and multiple with delta for smooth movement
@@ -106,8 +77,9 @@ public class EnemyController : MonoBehaviour
     
     void HandleFire()
     {
-        if (!isReady)
+        if (!isReady || transform.position.z > 14f) //Dont want to fire when AI is out of the screen
             return;
+        
         //We will compare the last fire time with current time in order to give delay between firing
         if (currentFireCount>=nFireAtATime && nFireAtATime>0)
         {
@@ -152,6 +124,7 @@ public class EnemyController : MonoBehaviour
             }
         }
     }
+  
     IEnumerator FireByDelay(int i,float delay)
     {
        
@@ -171,7 +144,7 @@ public class EnemyController : MonoBehaviour
         fire.Fire(fireSpeed);
         
     }
-    public List<ParticleSystem> particlesFires = new List<ParticleSystem>();
+    List<ParticleSystem> particlesFires = new List<ParticleSystem>();
     public ParticleSystem GetParticles()
     {
         for(int i=0;i< particlesFires.Count;i++)
@@ -181,7 +154,7 @@ public class EnemyController : MonoBehaviour
         }
         return null;
     }
-    public List<PlayerFire> fires;
+    List<PlayerFire> fires=new List<PlayerFire>();
     public PlayerFire GetFires()
     {
         for (int i = 0; i < fires.Count; i++)
@@ -212,23 +185,18 @@ public class EnemyController : MonoBehaviour
         healthBg.transform.parent.gameObject.SetActive(true);
 
     }
-    public void OnHit(float damageAmount=1)
+    public override void OnHit(float damageAmount=1)
     {
+       
         if (!isReady)
             return;
         if (healthPoint <= 0)
             return;
-        //Debug.Log("Hit by "+damageAmount);
-        healthPoint-=damageAmount;
-        //InOrder to Give Flash effect we loop with renderer list and assign the flash material
-        for(int i = 0; i < renderer.Count; i++)
-        {
-            renderer[i].material = flash;
-        }
+        base.OnHit(damageAmount);
         //Update the Health Bar
         UpdateHealthBar();
         //Call the function to reset renderer material
-        Invoke("ResetFlash", flashDelay);
+       
         //if Health Point is less or zero we will do some function by GameManager
         //Like score
         if(healthPoint<=0)
@@ -248,27 +216,37 @@ public class EnemyController : MonoBehaviour
 
     }
     //Reset function to change the material to defaults
-    public void ResetFlash()
-    {
-        for (int i = 0; i < renderer.Count; i++)
-        {
-            renderer[i].material = defaultMaterial[i];
-        }
-    }
+   
     //Effect 
     #region Effect
     public Vector3 explosionEffectScale=new Vector3(1,1,1);
+    //public AudioSource explosionAS;
      void LoadExplosion()
     {
         GameObject explosionEffect = GameManager.instance.GetExplosionEffect();
         if (explosionEffect == null)
         {
             explosionEffect = Instantiate(GameManager.instance.explosionEffect);
+          
+        }
+        else
+        {
+            GameManager.instance.explosionList.Add(explosionEffect);
+        }
+        if(StaticData.IsSoundOn())
+        {
+
+          //  Debug.Log("Explosion Play");
+            //The better way to do without calling the GetComponent 
+            if (explosionEffect.GetComponent<AudioSource>())
+                explosionEffect.GetComponent<AudioSource>().Play();
+            
+        }
             explosionEffect.transform.position = transform.position;
             GameManager.instance.DisableGameObjWithDelay(explosionEffect, 5);
             explosionEffect.transform.localScale = explosionEffectScale;
             explosionEffect.SetActive(true);
-        }
+       
     }
 
     #endregion

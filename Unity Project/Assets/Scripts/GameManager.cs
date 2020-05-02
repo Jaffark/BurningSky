@@ -9,18 +9,34 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     //Defining Static  for GameManager
     public static GameManager instance;
-    
+    public AudioSource bgAudiosSource;
     private void Awake()
-    {
-
-      
+    {             
         instance = this;
+        if(bgAudiosSource && StaticData.IsMusicOn())
+        {
+            bgAudiosSource.Play();
+        }
     }
     void Start()
     {
         //Loading Level Base on Selection from Menu
         SetLevel();
         defaultCameraPos = cam.transform.position;
+        CheckPlayerMovementSensitivity();
+    }
+    //In order to give control over the movement Touch Sensitivity of player
+    //We have added the Slider 
+    public Slider movementTSSlider;
+    public void OnSliderMTSValueChange()
+    {
+        //Setting PlayerPref data so that it can be save through out the game(Till user delete data or uninstall the game)
+        StaticData.SetMovemenetTouchSensitivity(movementTSSlider.value);
+        CheckPlayerMovementSensitivity();
+    }
+    void CheckPlayerMovementSensitivity()
+    {
+        player.touchMovementSensitivity = StaticData.GetMovementTouchSensitivity();
     }
     //Level Base not Random
     //List Of Level 
@@ -387,6 +403,14 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2);
         ShowResultPage("Completed");
     }
+    public AudioSource explosionPlayerAS,crashPlayerAS;
+    public void PlayExplosionPlayer()
+    {
+        GameObject effectExplo = Instantiate(explosionEffect);
+        effectExplo.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        effectExplo.transform.position = player.transform.position;
+        explosionPlayerAS.Play();
+    }
     public GameObject failedPageContent, completePageContent;
     public void ShowResultPage(string resultType)
     {
@@ -419,8 +443,17 @@ public class GameManager : MonoBehaviour
        
       //  resultPage.SetActive(true);
     }
+    public void ShowLevelFailedByDelay()
+    {
+        Invoke("ShowFailedPage", 2f);
+    }
+    void ShowFailedPage()
+    {
+        ShowResultPage("Failed");
+    }
     public void NextAtLevelCompleted()
     {
+        ClickSound();
         //When You press Next button we will show level selection instead of Menu Page
         //So using this static variable we can know frome where the player has come from
         StaticData.comeFromPage = "LevelCompleted";
@@ -429,11 +462,13 @@ public class GameManager : MonoBehaviour
     }
     public void RetryAtFailed()
     {
+        ClickSound();
         failedPageContent.SetActive(false);
         Application.LoadLevel(Application.loadedLevelName);
     }
     public void HomeAtFailed()
     {
+        ClickSound();
         failedPageContent.SetActive(false);
         Application.LoadLevel("Menu");
     }
@@ -443,24 +478,29 @@ public class GameManager : MonoBehaviour
     public GameObject pausePage;
     public void Paused()
     {
+        ClickSound();
         Time.timeScale = 0;
+        movementTSSlider.value = StaticData.GetMovementTouchSensitivity();
         pausePage.SetActive(true);
     }
     public void Resume()
     {
         Time.timeScale = 1;
+        ClickSound();
         pausePage.SetActive(false);
     }
     public void HomeAtPause()
     {
         Time.timeScale = 1;
         pausePage.SetActive(false);
+        ClickSound();
         Application.LoadLevel("Menu");
     }
     public void RetryAtPause()
     {
         Time.timeScale = 1;
         pausePage.SetActive(false);
+        ClickSound();
         Application.LoadLevel(Application.loadedLevelName);
     }
     #endregion
@@ -526,6 +566,15 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
         obj.SetActive(false);
+    }
+    public void ClickSound()
+    {
+        if (StaticData.IsSoundOn())
+        {
+            GameObject soundClicp = Instantiate(Resources.Load("Click")) as GameObject;
+            soundClicp.transform.position = Camera.main.transform.position;
+            soundClicp.SetActive(true);
+        }
     }
 
 }

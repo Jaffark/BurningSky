@@ -1,5 +1,12 @@
 # BurningSky
 Burning Sky Demo
+v0.5
+What's in V0.5?
+1. Mouse Control (Hold and Move)
+2. Code Clean up
+3. Sounds
+
+
 V0.4
 What's in V0.4?
 1. Power Up 2 (2X Hit)
