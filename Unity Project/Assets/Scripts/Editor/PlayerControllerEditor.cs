@@ -146,6 +146,6 @@ public class PlayerControllerEditor : GluEditor
         }
         EndFold();
         EndFold();
-
+        EditorUtility.SetDirty(baseScript);
     }
 }

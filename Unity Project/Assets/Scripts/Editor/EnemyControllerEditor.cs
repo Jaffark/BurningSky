@@ -105,6 +105,6 @@ public class EnemyControllerEditor : GluEditor
         baseScript.powerUpToGive = (ePowerUpType)EditorGUILayout.EnumPopup("Power Up After Destroy", baseScript.powerUpToGive);//, typeof(ePowerUpType));, allowSceneObjects: true);
         //baseScript.explosionAS = (AudioSource)EditorGUILayout.ObjectField("Explosion Audio Source", baseScript.explosionAS, typeof(AudioSource), allowSceneObjects: true);
         EndFold();
-
+        EditorUtility.SetDirty(baseScript);
     }
 }

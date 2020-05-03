@@ -83,13 +83,25 @@ public class PlayerFire : MonoBehaviour
             }
 
         }
-       
 
-       // if the bulllet goes off the screen we will disable it
-        if(transform.position.z>20f || transform.position.z<-10)
+
+        // if the bulllet goes off the screen we will disable it
+        if (useTarget)
         {
-            gameObject.SetActive(false);
+            if (transform.position.z > 14.5f || transform.position.z < -10)
+            {
+                gameObject.SetActive(false);
+            }
         }
+        else
+        {
+            if (transform.position.z > 20f || transform.position.z < -10)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+        
+
     }
     //Since we are using same script for both Enemy and player
     //We will compare it and do the function call which is almost same

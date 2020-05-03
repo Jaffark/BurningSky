@@ -1,5 +1,10 @@
 # BurningSky
 Burning Sky Demo
+v0.6
+What's in V0.6?
+1. Few changes to Player, Drone and Boss 
+2. Drone Bullet Bug Fixed
+
 v0.5
 What's in V0.5?
 1. Mouse Control (Hold and Move)

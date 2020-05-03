@@ -183,6 +183,10 @@ public class EnemyController : FighterPlane
     {
         isReady = true;
         healthBg.transform.parent.gameObject.SetActive(true);
+        if(GetComponent<Animator>())
+        {
+            GetComponent<Animator>().enabled = true;
+        }
 
     }
     public override void OnHit(float damageAmount=1)
