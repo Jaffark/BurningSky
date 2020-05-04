@@ -203,7 +203,6 @@ MonoBehaviour:
   currentHealthScale: {x: 1, y: 1, z: 1}
   isReady: 1
   explosionEffectScale: {x: 1, y: 1, z: 1}
-  explosionAS: {fileID: 0}
 --- !u!54 &3183853903569395931
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -232,7 +231,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33d85c63a8edd634b838aba961fc6472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forwardSpeed: 2
+  forwardSpeed: 2.5
   speed: 0.5
   pointToMove: {x: 11, y: 0, z: 5}
   behaviourWhenZ: 6

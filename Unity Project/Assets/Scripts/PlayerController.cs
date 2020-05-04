@@ -34,6 +34,9 @@ public class PlayerController : FighterPlane
     public float fanRotationSpeed;
     // Update is called once per frame
     public float touchMovementSensitivity=4;
+    public float distanceByMouseMove;
+    Vector3 lastMousePosition;
+    public bool allowTouch;
     void Update()
     {
         //Dont want to run update when fighter plane is in Menu other than fan
@@ -47,10 +50,34 @@ public class PlayerController : FighterPlane
         float inputRight = Input.GetAxis("Horizontal");
         float inputUp = Input.GetAxis("Vertical");
         //For Phone or Mouse 
+        if (Input.GetMouseButtonDown(0))
+        {
+            lastMousePosition = Input.mousePosition;
+        }
         if (Input.GetMouseButton(0))
         {
-            inputRight = Input.GetAxisRaw("Mouse X") * touchMovementSensitivity;
-            inputUp = Input.GetAxisRaw("Mouse Y") * touchMovementSensitivity;
+            if(!allowTouch)
+            {
+               // Debug.Log("Magnitude " + Input.mousePosition.normalized);
+                distanceByMouseMove = Vector3.Distance(lastMousePosition, Input.mousePosition);
+              //  Debug.Log(Screen.height * 0.02f);
+              //  Debug.Log("Distance " + distanceByMouseMove);
+                if(distanceByMouseMove>Screen.height*0.03f)
+                {
+                    allowTouch = true; 
+                }
+            }
+           
+
+            if (allowTouch)
+            {
+                inputRight = Input.GetAxisRaw("Mouse X") * touchMovementSensitivity;
+                inputUp = Input.GetAxisRaw("Mouse Y") * touchMovementSensitivity;
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0)){
+            allowTouch = false;
         }
 
         float tiltAroundZ = inputRight * tiltAngle;      

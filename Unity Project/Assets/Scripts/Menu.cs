@@ -31,8 +31,13 @@ public class Menu : MonoBehaviour
         CheckMusicSprite();
         CheckBgSound();
         //To Set Resolution in PC to Portriat
-        Screen.SetResolution(450, 750, true);
-        if(StaticData.comeFromPage == "LevelCompleted")
+        #if UNITY_STANDALONE_WIN
+                  Screen.SetResolution(450, 750, true);            
+        #endif
+
+
+
+        if (StaticData.comeFromPage == "LevelCompleted")
         {
             PlayAtMenu();
         }

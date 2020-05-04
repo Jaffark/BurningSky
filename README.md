@@ -1,5 +1,10 @@
 # BurningSky
 Burning Sky Demo
+v0.7
+What's in V0.7?
+1. Fixed Control for Android Build 
+2. Added APK
+
 v0.6
 What's in V0.6?
 1. Few changes to Player, Drone and Boss 

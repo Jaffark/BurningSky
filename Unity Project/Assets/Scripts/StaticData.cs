@@ -8,8 +8,12 @@ public class StaticData : MonoBehaviour
     public static float movementTouchSensitivity;
     public static float GetMovementTouchSensitivity()
     {
+
+#if UNITY_STANDALONE_WIN
         return  PlayerPrefs.GetFloat("MovementTouchSensitivity", 4);
-        
+#endif
+        return PlayerPrefs.GetFloat("MovementTouchSensitivity", 1);
+
     }
     public static void SetMovemenetTouchSensitivity(float val)
     {
